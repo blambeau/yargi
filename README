@@ -1,3 +1,37 @@
 = Yargi
 
-Yargi aims at providing a powerful mutable digraph implementation.
+Yargi aims at providing a powerful mutable digraph implementation. As reflected by its name,
+Yargi as Yet Another (Ruby) Graph Implementation: we all have implemented a graph data structure
+in almost every language that we use, probably many times. The reason is probably that each 
+implementation has its own design decisions that makes the data-structure well-designed for
+the task at hand, or not. Below are the main design decisions made by Yargi.
+
+[Digraph, Vertex and Edge] Unlike {RGL}[http://rubyforge.org/projects/rgl/], Yargi implements
+                           graph components through concrete classes, not modules (that is, in 
+                           a standard-but-closed way).
+[Markable pattern] Graphs, vertices and edges are markable through a Hash-like API: users can
+                   install their own key/value pairs on each graph element. When keys are Symbol
+                   objects, accessors are automatically generated to provide a friendly object-oriented
+                   API (this feature must be used with care, for obvious reasons).
+[Typed elements] Graph elements (vertices and edges) can be tagged with your own modules (at creation,
+                 or later). This is the standard Yarvi way to apply a 'select-and-do' feature: connect
+                 all these vertices to these ones, for example.
+[Mutable graphs] Graphs here are mutable, mutable and mutable and this is the reason why Yargi
+                 exists. It comes from a project where manipulating graphs by reconnecting edges,
+                 removing vertices is the norm, not the exception.
+[Complexity don't care] The digraph implementation uses an incident list data structure. This graph
+                        library has not been designed with efficiency in mind so that complexities 
+                        are not documented not guaranteed. That is not to say that improvements are
+                        not welcome, of course.
+                        
+== Example
+
+  # create a directed graph
+  digraph = Yargi::Digraph.new
+  
+  # create 10 source and 5 sink vertices, tag them with user modules
+  sources = digraph.add_n_vertices(10, Source)
+  sinks = digraph.add_n_vertices(5, Sink)
+  
+  # connect source to sink states
+  digraph.connect(sources, sinks, :priority => 1.0)

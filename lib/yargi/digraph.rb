@@ -2,8 +2,10 @@ require 'yargi/digraph_vertex'
 require 'yargi/digraph_edge'
 
 module Yargi
-  
-  # Directed graph implementation
+
+  #
+  # Directed graph implementation.
+  #
   class Digraph
     include Yargi::Markable
   
@@ -14,26 +16,6 @@ module Yargi
       @marks = {}
     end
     
-    # Checks graph sanity
-    def check_sanity
-      @vertices.each_with_index do |v,i| 
-        raise "Removed vertex in vertex list" unless v.index==i
-        v.in_edges.each do |ine|
-          raise "Removed edge in vertex incoming edges" if ine.index<0
-          raise "Vertex and edge don't agree on target" unless ine.target==v 
-        end
-        v.out_edges.each do |oute|
-          raise "Removed edge in vertex outgoing edges" if oute.index<0
-          raise "Vertex and edge don't agree on source" unless oute.source==v 
-        end
-      end
-      @edges.each_with_index do |e,i| 
-        raise "Removed edge in edge list" unless e.index==i
-        raise "Edge in-connected to a removed vertex" if e.source.index<0
-        raise "Edge out-connected to a removed vertex" if e.target.index<0
-      end
-    end
-  
     ### Vertex management ################################################
     
     # Returns the graph vertices. If a block is given, returns only vertices
@@ -173,8 +155,29 @@ module Yargi
     end
     
     ### Argument conventions #############################################
+    protected
     
-    # Applies conventions on _element_
+    # Checks graph sanity
+    def check_sanity
+      @vertices.each_with_index do |v,i| 
+        raise "Removed vertex in vertex list" unless v.index==i
+        v.in_edges.each do |ine|
+          raise "Removed edge in vertex incoming edges" if ine.index<0
+          raise "Vertex and edge don't agree on target" unless ine.target==v 
+        end
+        v.out_edges.each do |oute|
+          raise "Removed edge in vertex outgoing edges" if oute.index<0
+          raise "Vertex and edge don't agree on source" unless oute.source==v 
+        end
+      end
+      @edges.each_with_index do |e,i| 
+        raise "Removed edge in edge list" unless e.index==i
+        raise "Edge in-connected to a removed vertex" if e.source.index<0
+        raise "Edge out-connected to a removed vertex" if e.target.index<0
+      end
+    end
+  
+    # Applies argument conventions on _element_
     def apply_arg_conventions(element, args)
       args.each do |arg|
         case arg

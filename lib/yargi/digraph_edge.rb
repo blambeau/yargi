@@ -1,7 +1,13 @@
 module Yargi
   class Digraph
     
-    # Edge inside a graph
+    #
+    # Edge inside a digraph
+    #
+    # Methods reconnect, index= are provided for Digraph itself and are not 
+    # intended to be used directly. Probably unexpectedly, source and target 
+    # writers are provided as reconnection shortcuts and can be used by users.
+    #
     class Edge
       include Yargi::Markable
       

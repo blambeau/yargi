@@ -21,7 +21,7 @@ module Yargi
       assert_equal [v1], @digraph.vertices {|v| v.index==0}
       assert_equal [v1, v3], @digraph.vertices {|v| v.index==0 or v.index==2}
       assert_equal [v1, v2], @digraph.vertices {|v| v[:kind]==:point}
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_module_extended_vertices
@@ -37,7 +37,7 @@ module Yargi
       v1, v2, v3 = @digraph.add_n_vertices(3)
       e12, e23, e32, e21 = @digraph.connect_all([v1, v2], [v2, v3], [v3, v2], [v2, v1])
       assert_equal [e12, e23], @digraph.edges {|e| e.index<=1}
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_each_vertex
@@ -69,7 +69,7 @@ module Yargi
       assert_equal [v1, v2], @digraph.vertices
       assert_equal 0, v1.index
       assert_equal 1, v2.index
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_add_vertices
@@ -80,7 +80,7 @@ module Yargi
       assert_not_nil v2
       assert_equal :end, v2[:style]
       assert_equal [v1, v2], @digraph.vertices
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_add_vertices
@@ -91,7 +91,7 @@ module Yargi
       v2[:hello] = "world2"
       v3[:hello] = "world3"
       assert_equal ["world1", "world2", "world3"], @digraph.vertices.collect{|v| v[:hello]}
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_connect
@@ -109,7 +109,7 @@ module Yargi
       assert_equal [edge], v1.out_edges
       assert_equal [], v2.out_edges
       assert_equal [edge], v2.in_edges
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_connect_all
@@ -123,7 +123,7 @@ module Yargi
       assert_equal [e2], v1.in_edges
       assert_equal [e2], v2.out_edges
       assert_equal [e1], v1.out_edges
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_connect_all_with_marks
@@ -141,7 +141,7 @@ module Yargi
       assert_equal "world", e2[:hello]
       e1[:hello] = "world1"
       assert_equal "world", e2[:hello]
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_remove_edge
@@ -171,7 +171,7 @@ module Yargi
       assert_equal [], v2.in_edges
       assert_equal [e2], v2.out_edges
       assert_equal 0, e2.index
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_remove_edges
@@ -200,7 +200,7 @@ module Yargi
       assert_equal [e23, e21], v2.out_edges
       assert_equal [e23], v3.in_edges
       assert_equal [e21], v1.in_edges
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_remove_vertex
@@ -216,7 +216,7 @@ module Yargi
       assert_equal [e23, e32], @digraph.edges
       assert_equal [e23], v2.out_edges
       assert_equal [e32], v2.in_edges
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     def test_reconnect
@@ -229,7 +229,7 @@ module Yargi
       assert_equal v1, edge.target
       assert_equal [edge], v1.in_edges
       assert_equal [edge], v2.out_edges
-      assert_nothing_raised { @digraph.check_sanity }
+      assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
     # def test_remove_vertex_with_block
@@ -252,7 +252,7 @@ module Yargi
     #   assert_equal [e12, e32], v1.out_edges
     #   assert_equal [e12, e32], v2.in_edges
     #   assert_equal [e23, e21], v2.out_edges
-    #   assert_nothing_raised { @digraph.check_sanity }
+    #   assert_nothing_raised { @digraph.send(:check_sanity) }
     # end
     # 
     # def test_remove_vertex_with_block_using_edge_shortcuts
@@ -275,7 +275,7 @@ module Yargi
     #   assert_equal [e12, e32], v1.out_edges
     #   assert_equal [e12, e32], v2.in_edges
     #   assert_equal [e23, e21], v2.out_edges
-    #   assert_nothing_raised { @digraph.check_sanity }
+    #   assert_nothing_raised { @digraph.send(:check_sanity) }
     # end
     
   end

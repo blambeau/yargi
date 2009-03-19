@@ -1,7 +1,12 @@
 module Yargi
   class Digraph
     
-    # Simple vertex inside a graph
+    #
+    # Vertex inside a digraph.
+    #
+    # Methods add_in_edge, remove_in_edge, add_out_edge, remove_out_edge and index= 
+    # are provided for Digraph itself and are not intended to be used directly.
+    #
     class Vertex
       include Yargi::Markable
     
