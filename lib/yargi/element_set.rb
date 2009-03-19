@@ -13,7 +13,13 @@ module Yargi
     def get_mark(key)
       self.collect {|elm| elm.get_mark(key)}
     end
-    alias :[] :get_mark
+
+    # If key is an integer, returns the key-th element in this set.
+    # Same as get_mark otherwise.
+    def [](key)
+      return super(key) if Integer===key
+      get_mark(key)
+    end
     
     # Fired to each element of the group. Values are duplicated by default. 
     # Put dup to false to avoid this behavior.

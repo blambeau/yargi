@@ -18,12 +18,26 @@ module Yargi
     
     ### Vertex management ################################################
     
-    # Returns the graph vertices. If a block is given, returns only vertices
-    # for which the block returns true (according to standard Ruby boolean 
-    # conventions).
-    def vertices(&block)
-      return @vertices.dup.extend(VertexSet) unless block_given?
-      @vertices.select(&block).extend(VertexSet)
+    # Returns the graph vertices. If _mods_ is empty it is simply ignored. 
+    # Otherwise it is expected to contain module instances. In this case, 
+    # only vertices tagged with at least one of those modules  are returned.
+    # If a block is given, only vertices for which the block  evaluates to 
+    # true are returned. The two filtering techniques can be used conjointly 
+    # with an AND meaning. In other words, this method is a shortcut for:
+    #
+    #   @vertices.select{|v| mods.any?{|mod| mod===v} and yield(v)}
+    # 
+    def vertices(*mods, &block)
+      if mods.empty?
+        return @vertices.dup.extend(VertexSet) unless block_given?
+        return @vertices.select(&block).extend(VertexSet)
+      elsif block_given?
+        return @vertices.select do |v| 
+          mods.any?{|mod| mod===v} and yield(v)
+        end.extend(VertexSet)
+      else
+        return @vertices.select{|v| mods.any?{|mod| mod===v}}.extend(VertexSet)
+      end
     end
     
     # Calls block on each graph vertex
@@ -40,11 +54,18 @@ module Yargi
       vertex
     end
     
-    # Creates n vertices
+    # Creates n vertices. _args_ can be module instances or hashes, 
+    # which are all installed on vertices _v_ using  <tt>v.tag</tt> 
+    # and <tt>v.add_marks</tt>, respectively. If a block is given, 
+    # it is called after each vertex creation. The vertex is passed
+    # as first argument and the iteration index (from 0 to n-1) as
+    # second one.
     def add_n_vertices(n, *args)
       vertices = []
       n.times do |i|
-        vertices << add_vertex(*args)
+        vertex = add_vertex(*args)
+        vertices << vertex
+        yield vertex, i if block_given?
       end
       vertices.extend(VertexSet)
     end
@@ -66,12 +87,26 @@ module Yargi
   
     ### Edge management ##################################################
     
-    # Returns the graph edges. If a block is given, returns only edges
-    # for which the block returns true (according to standard Ruby boolean 
-    # conventions).
-    def edges(&block)
-      return @edges.dup.extend(EdgeSet) unless block_given?
-      @edges.select(&block).extend(EdgeSet)
+    # Returns the graph edges. If _mods_ is empty it is simply ignored. 
+    # Otherwise it is expected to contain module instances. In this case, 
+    # only edges tagged with at least one of those modules are returned.
+    # If a block is given, only edges for which the block evaluates to 
+    # true are returned. The two filtering techniques can be used conjointly 
+    # with an AND meaning. In other words, this method is a shortcut for:
+    #
+    #   @edges.select{|e| mods.any?{|mod| mod===v} and yield(e)}
+    # 
+    def edges(*mods, &block)
+      if mods.empty?
+        return @edges.dup.extend(EdgeSet) unless block_given?
+        return @edges.select(&block).extend(EdgeSet)
+      elsif block_given?
+        return @edges.select do |e| 
+          mods.any?{|mod| mod===e} and yield(e)
+        end.extend(EdgeSet)
+      else
+        return @edges.select{|e| mods.any?{|mod| mod===e}}.extend(EdgeSet)
+      end
     end
     
     # Calls block on each graph edge

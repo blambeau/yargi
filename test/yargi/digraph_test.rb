@@ -18,10 +18,31 @@ module Yargi
       v3 = @digraph.add_vertex({:kind => :end})
       assert_equal :point, v1.kind
       assert_equal :end, v3.kind
+      assert_equal [v1, v2, v3], @digraph.vertices
+      assert_equal v1, @digraph.vertices[0]
       assert_equal [v1], @digraph.vertices {|v| v.index==0}
       assert_equal [v1, v3], @digraph.vertices {|v| v.index==0 or v.index==2}
       assert_equal [v1, v2], @digraph.vertices {|v| v[:kind]==:point}
       assert_nothing_raised { @digraph.send(:check_sanity) }
+    end
+    
+    def test_vertices_with_mods
+      untils = @digraph.add_n_vertices(5, Until)
+      ifs = @digraph.add_n_vertices(5, If)
+      assert_equal untils, @digraph.vertices(Until)
+      assert_equal ifs, @digraph.vertices(If)
+      assert_equal (untils+ifs), @digraph.vertices(Until, If)
+    end
+    
+    def test_vertices_with_both
+      untils = @digraph.add_n_vertices(5, Until)
+      ifs = @digraph.add_n_vertices(5, If)
+      assert_equal([@digraph.vertices[0]], @digraph.vertices(Until) do |v|
+        v.index==0
+      end)
+      assert_equal([], @digraph.vertices(If) do |v|
+        v.index==0
+      end)
     end
     
     def test_module_extended_vertices
@@ -80,18 +101,7 @@ module Yargi
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
     
-    def test_add_vertices
-      v1, v2 = @digraph.add_vertices({:style => :begin}, {:style => :end})
-      assert_not_nil v1
-      assert_equal [@digraph, @digraph], [v1.graph, v2.graph]
-      assert_equal :begin, v1[:style]
-      assert_not_nil v2
-      assert_equal :end, v2[:style]
-      assert_equal [v1, v2], @digraph.vertices
-      assert_nothing_raised { @digraph.send(:check_sanity) }
-    end
-    
-    def test_add_vertices
+    def test_add_n_vertices
       v1, v2, v3 = @digraph.add_n_vertices(3, {:hello => "world"})
       assert_equal [v1, v2, v3], @digraph.vertices
       assert_equal [0, 1, 2], [v1.index, v2.index, v3.index]
@@ -100,6 +110,17 @@ module Yargi
       v3[:hello] = "world3"
       assert_equal ["world1", "world2", "world3"], @digraph.vertices.collect{|v| v[:hello]}
       assert_nothing_raised { @digraph.send(:check_sanity) }
+    end
+    
+    def test_add_n_vertices_with_block
+      vertices = @digraph.add_n_vertices(5, Until) do |v,i|
+        v.set_mark(:mark, i)
+      end
+      vertices.each_with_index do |v,i|
+        assert_equal i, v.mark
+        assert Until===v
+      end
+      assert_equal [0, 1, 2, 3, 4], vertices.get_mark(:mark)
     end
     
     def test_connect
@@ -239,7 +260,7 @@ module Yargi
       assert_equal [edge], v2.out_edges
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+        
     # def test_remove_vertex_with_block
     #   v1, v2, v3 = @digraph.add_n_vertices(3)
     #   e12 = @digraph.connect(v1, v2)
