@@ -1,0 +1,33 @@
+module Yargi
+  
+  # Main module of VertexSet and EdgeSet
+  module ElementSet
+    
+    # Fired to each element of the group. 
+    def tag(*modules)
+      self.each {|elm| elm.tag(*modules)}
+    end
+    
+    # Collects result of get_mark invocation on each element of the 
+    # group and returns it as an array.
+    def get_mark(key)
+      self.collect {|elm| elm.get_mark(key)}
+    end
+    alias :[] :get_mark
+    
+    # Fired to each element of the group. Values are duplicated by default. 
+    # Put dup to false to avoid this behavior.
+    def set_mark(key, value, dup=true)
+      self.each {|elm| elm.set_mark(key, (dup and not(Symbol===value)) ? value.dup : value)}
+    end
+    alias :[]= :set_mark
+    
+    # Fired to each element of the group. 
+    def add_marks(marks)
+      self.each {|elm| elm.add_marks(marks)}
+    end
+    alias :merge_marks :add_marks
+    
+  end # module ElementSet
+  
+end

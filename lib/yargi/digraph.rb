@@ -22,8 +22,8 @@ module Yargi
     # for which the block returns true (according to standard Ruby boolean 
     # conventions).
     def vertices(&block)
-      return @vertices.dup unless block_given?
-      @vertices.select &block
+      return @vertices.dup.extend(VertexSet) unless block_given?
+      @vertices.select(&block).extend(VertexSet)
     end
     
     # Calls block on each graph vertex
@@ -46,7 +46,7 @@ module Yargi
       n.times do |i|
         vertices << add_vertex(*args)
       end
-      vertices
+      vertices.extend(VertexSet)
     end
     
     # Removes a vertex and all incoming and outgoing edges.
@@ -70,8 +70,8 @@ module Yargi
     # for which the block returns true (according to standard Ruby boolean 
     # conventions).
     def edges(&block)
-      return @edges.dup unless block_given?
-      @edges.select &block
+      return @edges.dup.extend(EdgeSet) unless block_given?
+      @edges.select(&block).extend(EdgeSet)
     end
     
     # Calls block on each graph edge
@@ -103,7 +103,7 @@ module Yargi
     def add_edges(*extremities)
       extremities.collect do |extr|
         add_edge(extr[0], extr[1], *extr[2..-1])
-      end
+      end.extend(EdgeSet)
     end
     alias :connect_all :add_edges
     
@@ -182,7 +182,7 @@ module Yargi
       args.each do |arg|
         case arg
           when Module
-            element.extend(arg)
+            element.tag(arg)
           when Hash
             element.add_marks(arg)
           else

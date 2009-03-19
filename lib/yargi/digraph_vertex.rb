@@ -25,12 +25,12 @@ module Yargi
       
       # Returns a copy of the incoming edges list.
       def in_edges
-        @in_edges.dup
+        @in_edges.dup.extend(VertexSet)
       end
     
       # Returns a copy of the outgoing edges list.
       def out_edges
-        @out_edges.dup
+        @out_edges.dup.extend(VertexSet)
       end
     
       # Adds an incoming edge

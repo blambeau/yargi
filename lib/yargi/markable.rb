@@ -9,6 +9,11 @@ module Yargi
   #
   module Markable
 
+    # Tag this element with some modules
+    def tag(*modules)
+      modules.each {|mod| self.extend(mod)}
+    end
+
     # Returns the mark value installed under _key_. Returns nil if no such mark.
     def get_mark(key)
       @marks ? @marks[key] : nil; 

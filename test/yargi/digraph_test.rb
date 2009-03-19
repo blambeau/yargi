@@ -33,6 +33,14 @@ module Yargi
       assert_equal [v2], @digraph.vertices {|v| If===v}
     end
     
+    def test_tag
+      v1, v2 = @digraph.add_n_vertices(2)
+      v1.tag(Until)
+      v2.tag(If, Until)
+      assert Until===v1
+      assert If===v2 and Until===v2
+    end
+    
     def test_edges
       v1, v2, v3 = @digraph.add_n_vertices(3)
       e12, e23, e32, e21 = @digraph.connect_all([v1, v2], [v2, v3], [v3, v2], [v2, v1])

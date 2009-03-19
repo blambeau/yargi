@@ -38,7 +38,7 @@ module Yargi
       
       # Returns edge extremities
       def extremities
-        [source, target]
+        [source, target].extend(VertexSet)
       end
       
       # Shortcut for digraph.reconnect(edge, source, nil)
