@@ -83,9 +83,9 @@ module Yargi
     # Connects source to target state(s)
     def add_edge(source, target, *args)
       if Array===source
-        source.collect {|src| connect(src, target, *args)}
+        source.collect {|src| connect(src, target, *args)}.flatten.extend(EdgeSet)
       elsif Array===target
-        target.collect {|trg| connect(source, trg, *args)}
+        target.collect {|trg| connect(source, trg, *args)}.flatten.extend(EdgeSet)
       else
         raise ArgumentError, "Source may not be nil" unless source
         raise ArgumentError, "Target may not be nil" unless target
@@ -152,6 +152,32 @@ module Yargi
         edge.reconnect(source, target)
         edge
       end
+    end
+
+    ### Standard exports #################################################
+    
+    # Encodes this graph for dot graphviz
+    def to_dot(buffer='')
+      buffer << "digraph G {\n"
+      buffer << "  graph[#{to_dot_attributes(self.to_h(true))}]\n"
+      each_vertex do |v|
+        buffer << "  V#{v.index} [#{to_dot_attributes(v.to_h(true))}]\n"
+      end
+      each_edge do |e|
+        buffer << "  V#{e.source.index} -> V#{e.target.index} [#{to_dot_attributes(e.to_h(true))}]\n"
+      end
+      buffer << "}\n"
+    end
+    
+    # Converts a hash to dot attributes
+    def to_dot_attributes(hash)
+      # TODO: fix uncompatible key names
+      # TODO: some values must be encoded (backquoting and the like)
+      buffer = ""
+      hash.each_pair do |k,v|
+        buffer << "#{k}=\"#{v}\""
+      end
+      buffer
     end
     
     ### Argument conventions #############################################

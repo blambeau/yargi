@@ -7,7 +7,7 @@ dir     = File.dirname(__FILE__)
 lib     = File.join(dir, "lib", "yargi.rb")
 version = File.read(lib)[/^\s*VERSION\s*=\s*(['"])(\d\.\d\.\d)\1/, 2]
 
-task :default => [:test]
+task :default => [:test, :rerdoc, :copydoc]
 
 desc "Lauches all tests"
 Rake::TestTask.new do |test|
@@ -18,10 +18,13 @@ end
 
 desc "Generates rdoc documentation"
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.include( "README", "LICENCE", "lib/" )
+  rdoc.rdoc_files.include( "README", "LICENCE", "lib/")
   rdoc.main     = "README"
   rdoc.rdoc_dir = "doc/api"
-  rdoc.title    = "Yargi v.#{version}"
+  rdoc.title    = "Yargi v#{version}"
+end
+task :copydoc do
+  cp "test/yargi/README-example.gif", "doc/api"
 end
 
 gemspec = Gem::Specification.new do |s|

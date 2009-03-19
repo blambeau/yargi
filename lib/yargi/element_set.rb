@@ -22,9 +22,19 @@ module Yargi
     end
     alias :[]= :set_mark
     
-    # Fired to each element of the group. 
-    def add_marks(marks)
-      self.each {|elm| elm.add_marks(marks)}
+    # When _marks_ is provided, the invocation is fired to all group
+    # elements. When a block is given, it is called on each element,
+    # passing it as argument. If the block returns a hash, that hash
+    # is installed as marks on the iterated element. 
+    # The two usages (_marks_ and block) can be used conjointly.
+    def add_marks(marks=nil)
+      self.each {|elm| elm.add_marks(marks)} if marks
+      if block_given? 
+        self.each do |elm|
+          hash = yield elm
+          elm.add_marks(hash) if hash
+        end
+      end
     end
     alias :merge_marks :add_marks
     

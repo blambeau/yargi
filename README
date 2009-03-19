@@ -21,17 +21,28 @@ the task at hand, or not. Below are the main design decisions made by Yargi.
                  removing vertices is the norm, not the exception.
 [Complexity don't care] The digraph implementation uses an incident list data structure. This graph
                         library has not been designed with efficiency in mind so that complexities 
-                        are not documented not guaranteed. That is not to say that improvements are
+                        are not documented nor guaranteed. That is not to say that improvements are
                         not welcome, of course.
+[Ruby minded] Because we love that language!
                         
 == Example
 
   # create a directed graph
   digraph = Yargi::Digraph.new
+
+  # create 5 sources
+  sources = digraph.add_n_vertices(5)
+
+  # connect all
+  edges = digraph.connect(sources, sources)
+
+  # put some dot attributes
+  sources.add_marks(:shape => 'circle', :label => '')
+  edges.add_marks do |e|
+    {:label => "From #{e.source.index} to #{e.target.index}"}
+  end
   
-  # create 10 source and 5 sink vertices, tag them with user modules
-  sources = digraph.add_n_vertices(10, Source)
-  sinks = digraph.add_n_vertices(5, Sink)
-  
-  # connect source to sink states
-  digraph.connect(sources, sinks, :priority => 1.0)
+  # and print it
+  digraph.to_dot(STDOUT)
+
+link://README-example.gif
