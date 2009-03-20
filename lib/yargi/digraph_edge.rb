@@ -29,12 +29,18 @@ module Yargi
         @graph, @index = graph, index
         @source, @target = source, target
       end
+
+    
+      ### Pseudo-protected section ##########################################
       
       # Reconnects source and target
       def reconnect(source, target)
         @source = source if source
         @target = target if target
       end
+
+      
+      ### Query section #######################################################
       
       # Returns edge extremities
       def extremities
@@ -50,7 +56,19 @@ module Yargi
       def target=(target)
         @graph.reconnect(self, nil, target)
       end
-    
+      
+      
+      ### Sort, Hash, etc. section ############################################
+      
+      # Compares indexes
+      def <=>(other)
+        return nil unless Vertex===other and self.graph==other.graph
+        self.index <=> other.index
+      end
+      
+      
+      ### Export section ######################################################
+      
       # Returns a string representation
       def to_s; "e#{index}:#{source.to_s}->#{target.to_s}" end
           

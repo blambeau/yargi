@@ -46,6 +46,7 @@ module Yargi
     # Converts this Markable to a Hash. When _nonil_ is true, nil mark values
     # do not lead to hash entries.
     def to_h(nonil=true)
+      return {} unless @marks
       marks = @marks.dup
       if nonil
         marks.delete_if {|k,v| v.nil?}

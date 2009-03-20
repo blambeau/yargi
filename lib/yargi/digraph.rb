@@ -21,8 +21,7 @@ module Yargi
     # Returns all graph vertices for which the 'filter and block' predicate
     # evaluates to true (see Yargi::Predicate).
     def vertices(filter=nil, &block)
-      pred = Yargi::Predicate.to_predicate(filter, &block)
-      return @vertices.select{|v| pred===v}
+      @vertices.filter(filter, &block)
     end
     
     # Calls block on each graph vertex. If _filter_ is not nil?, only vertices
@@ -74,14 +73,13 @@ module Yargi
       vertex.index=-1
       self
     end
-  
+    
     ### Edge management ##################################################
     
     # Returns all graph edges for which the 'filter and block' predicate
     # evaluates to true (see Yargi::Predicate).
     def edges(filter=nil, &block)
-      pred = Yargi::Predicate.to_predicate(filter, &block)
-      return @edges.select{|e| pred===e}
+      @edges.filter(filter, &block)
     end
     
     # Calls block on each graph edge
@@ -220,6 +218,38 @@ module Yargi
         raise "Edge in-connected to a removed vertex" if e.source.index<0
         raise "Edge out-connected to a removed vertex" if e.target.index<0
       end
+    end
+    
+    # Applies argument conventions about selection of vertices
+    def to_vertices(args)
+      selected = case args
+        when VertexSet
+          args
+        when Array
+          args.collect{|arg| to_vertices(arg)}
+        when Digraph::Vertex
+          [args]
+        else
+          pred = Predicate.to_predicate(args)
+          vertices(pred)
+      end.flatten.uniq
+      VertexSet.new(selected)
+    end
+  
+    # Applies argument conventions about selection of edges
+    def to_edges(args, sort=false)
+      selected = case args
+        when EdgeSet
+          args
+        when Array
+          args.collect{|arg| to_edges(arg)}
+        when Digraph::Edge
+          [args]
+        else
+          pred = Predicate.to_predicate(args)
+          edges(pred)
+      end.flatten.uniq
+      EdgeSet.new(selected)
     end
   
     # Applies argument conventions on _element_

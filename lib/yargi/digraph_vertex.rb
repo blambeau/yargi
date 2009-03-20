@@ -22,17 +22,38 @@ module Yargi
         @graph, @index = graph, index
         @in_edges, @out_edges = EdgeSet[], EdgeSet[]
       end
+
+      
+      ### Query section #######################################################
       
       # Returns a copy of the incoming edges list.
-      def in_edges
-        @in_edges.dup
+      def in_edges(filter=nil, &block)
+        @in_edges.filter(filter, &block)
       end
     
       # Returns a copy of the outgoing edges list.
-      def out_edges
-        @out_edges.dup
+      def out_edges(filter=nil, &block)
+        @out_edges.filter(filter, &block)
+      end
+      
+      # Returns all adjacent vertices
+      def adjacent(filter=nil, &block)
+        (in_adjacent(filter, &block) + out_adjacent(filter, &block)).uniq
+      end
+      
+      # Returns back-adjacent vertices 
+      def in_adjacent(filter=nil, &block)
+        @in_edges.source.filter(filter, &block)
       end
     
+      # Returns forward-adjacent vertices 
+      def out_adjacent(filter=nil, &block)
+        @out_edges.target.filter(filter, &block)
+      end
+
+    
+      ### Pseudo-protected section ##########################################
+      
       # Adds an incoming edge
       def add_in_edge(edge)
         @in_edges << edge
@@ -52,6 +73,18 @@ module Yargi
       def remove_out_edge(edge)
         @out_edges.delete(edge)
       end
+      
+      
+      ### Sort, Hash, etc. section ############################################
+      
+      # Compares indexes
+      def <=>(other)
+        return nil unless Vertex===other and self.graph==other.graph
+        self.index <=> other.index
+      end
+      
+      
+      ### Export section ######################################################
       
       # Returns a string representation
       def to_s; "V#{index}" end

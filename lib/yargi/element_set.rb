@@ -7,74 +7,105 @@ module Yargi
     
     ### Factory section #######################################################
     
-    # Creates a VertexSet instance using _elements_ varargs.
+    # Creates a ElementSet instance using _elements_ varargs.
     def self.[](*elements)
       ElementSet.new(elements)
     end
     
+    
     ### Array handling ########################################################
 
     # Same as Array.dup
-    def dup() extend_result(super) end
+    def dup() # :nodoc: #
+      extend_result(super) 
+    end
     
     # See Array.compact
-    def compact() extend_result(super) end
+    def compact() # :nodoc: #
+      extend_result(super) 
+    end
     
     # See Array.flatten
-    def flatten() extend_result(super) end
+    def flatten() # :nodoc: #
+      extend_result(super) 
+    end
     
     # See Array.reverse
-    def reverse() extend_result(super) end
+    def reverse() # :nodoc: #
+      extend_result(super) 
+    end
     
     # See Array.uniq
-    def uniq() extend_result(super) end
+    def uniq() # :nodoc: #
+      extend_result(super) 
+    end
     
     # See Array.sort
-    def sort(&block) extend_result(super(&block)) end
+    def sort(&block) # :nodoc: #
+      extend_result(super(&block)) 
+    end
     
     # See Array.concat
-    def concat(other) extend_result(super(other)) end
+    def concat(other) # :nodoc: #
+      extend_result(super(other))
+    end
     
-    # See Array.clear
-    def [](*args)
+    # See Array.[]
+    def [](*args) # :nodoc: #
       result = super(*args)
       Array===result ? extend_result(result) : result 
     end
     
     # See Array.+
-    def +(right) extend_result(super(right)) end
+    def +(right) # :nodoc: #
+      extend_result(super(right)) 
+    end
     
     # See Array.-
-    def -(right) extend_result(super(right)) end
+    def -(right) # :nodoc: #
+      extend_result(super(right)) 
+    end
+      
       
     ### Enumerable handling ###################################################
     
     # See Enumerable.each_cons
-    def each_cons(n) super(n) {|c| yield extend_result(c)} end
+    def each_cons(n) # :nodoc: #
+      super(n) {|c| yield extend_result(c)} 
+    end
     
     # See Enumerable.each_slice
-    def each_slice(n) super(n) {|c| yield extend_result(c)} end
+    def each_slice(n) # :nodoc: #
+      super(n) {|c| yield extend_result(c)} 
+    end
     
     # See Enumerable.select
-    def select(&block) extend_result(super(&block)) end
+    def select(&block) # :nodoc: #
+      extend_result(super(&block)) 
+    end
       
     # See Enumerable.find_all
-    def find_all(&block) extend_result(super(&block)) end
+    def find_all(&block) # :nodoc: #
+      extend_result(super(&block)) 
+    end
       
     # See Enumerable.grep
-    def grep(pattern, &block)
+    def grep(pattern, &block) # :nodoc: #
       greped = super(pattern, &block)
       block_given? ? greped : extend_result(greped)
     end
       
     # See Enumerable.reject
-    def partition(&block)
+    def partition(&block) # :nodoc: #
       p = super(&block)
       [extend_result(p[0]), extend_result(p[1])]
     end
       
     # See Enumerable.reject
-    def reject(&block) extend_result(super(&block)) end
+    def reject(&block) # :nodoc: #
+      extend_result(super(&block)) 
+    end
+  
     
     ### Markable handling #####################################################
     
@@ -110,6 +141,16 @@ module Yargi
       end
     end
     alias :merge_marks :add_marks
+  
+    
+    ### Query handling ########################################################
+    
+    # Filters this set with a 'predicate and block' predicate 
+    # (see Yargi::Predicate)
+    def filter(predicate=nil, &block)
+      pred = Yargi::Predicate.to_predicate(predicate, &block)
+      extend_result(self.select{|e| pred===e})
+    end
     
     ### Protected section #####################################################
     protected
