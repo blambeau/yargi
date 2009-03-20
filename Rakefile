@@ -18,7 +18,7 @@ end
 
 desc "Generates rdoc documentation"
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.include( "README", "LICENCE", "lib/")
+  rdoc.rdoc_files.include( "README", "LICENCE", "CONTRIBUTE", "lib/")
   rdoc.main     = "README"
   rdoc.rdoc_dir = "doc/api"
   rdoc.title    = "Yargi v#{version}"
@@ -32,10 +32,10 @@ gemspec = Gem::Specification.new do |s|
   s.version = version
   s.summary = "Yet Another Ruby Graph Implementation"
   s.description = %{Mutable graphs made easy.}
-  s.files = Dir['lib/**/*'] + Dir['test/**/*'] 
+  s.files = Dir['lib/**/*'] + Dir['test/**/*']  + Dir['examples/**/*'] 
   s.require_path = 'lib'
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENCE"]
+  s.extra_rdoc_files = ["README", "LICENCE", "CONTRIBUTE"]
   s.rdoc_options << '--title' << 'Yargi - Yet Another Ruby Graph Implementation' <<
                     '--main' << 'README' <<
                     '--line-numbers'  

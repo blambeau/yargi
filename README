@@ -5,7 +5,7 @@ Yargi is Yet Another (Ruby) Graph Implementation: we all have implemented a grap
 in almost every language that we use, probably many times. The reason is probably that each 
 implementation has its own design decisions that makes the data-structure well-designed for
 the task at hand, or not. Below are the main design decisions made by Yargi; this way you can
-easily see if it fits your needs.
+easily see if Yargi fits your needs.
 
 [Digraph, Vertex and Edge] Unlike {RGL}[http://rubyforge.org/projects/rgl/], Yargi implements
                            graph components through concrete classes, not modules (that is, in 

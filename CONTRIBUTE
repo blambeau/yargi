@@ -1,0 +1,11 @@
+= Contribute
+
+You are welcome to contribute to this graph implementation. Useful links are:
+
+[http://rubyforge.org/projects/yargi/] 
+  Rubyforge project, issue manager, forum, etc. Ideas and questions are welcome. 
+  Don't hesitate to send me an e-mail if I don't answer quickly.
+[http://github.com/blambeau/yargi/tree/master] 
+  Sources are on github. Fork the thing there to submit contributions. Particularly
+  welcome: documentation reviewers, bug fixes (we love tests to prove bugs), 
+  efficiency patches, useful graph algorithms, etc.
