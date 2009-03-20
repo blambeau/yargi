@@ -15,9 +15,11 @@ module Yargi
   
       # create 10 source and 5 sink vertices, tag them with user modules
       sources = digraph.add_n_vertices(5, Source)
+      assert VertexSet===sources
   
       # connect source to sink states
       edges = digraph.connect(sources, sources)
+      assert EdgeSet===edges
   
       # put some dot attributes
       sources.add_marks(:shape => 'circle', :label => '')

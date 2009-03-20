@@ -20,17 +20,17 @@ module Yargi
       # Creates a vertex instance
       def initialize(graph, index)
         @graph, @index = graph, index
-        @in_edges, @out_edges = [], []
+        @in_edges, @out_edges = EdgeSet[], EdgeSet[]
       end
       
       # Returns a copy of the incoming edges list.
       def in_edges
-        @in_edges.dup.extend(VertexSet)
+        @in_edges.dup
       end
     
       # Returns a copy of the outgoing edges list.
       def out_edges
-        @out_edges.dup.extend(VertexSet)
+        @out_edges.dup
       end
     
       # Adds an incoming edge

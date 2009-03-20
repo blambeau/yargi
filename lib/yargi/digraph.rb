@@ -11,8 +11,8 @@ module Yargi
   
     # Creates an empty graph instance
     def initialize
-      @vertices = []
-      @edges = []
+      @vertices = VertexSet[]
+      @edges = EdgeSet[]
       @marks = {}
     end
     
@@ -22,7 +22,7 @@ module Yargi
     # evaluates to true (see Yargi::Predicate).
     def vertices(filter=nil, &block)
       pred = Yargi::Predicate.to_predicate(filter, &block)
-      return @vertices.select{|v| pred===v}.extend(VertexSet)
+      return @vertices.select{|v| pred===v}
     end
     
     # Calls block on each graph vertex. If _filter_ is not nil?, only vertices
@@ -57,7 +57,7 @@ module Yargi
         vertices << vertex
         yield vertex, i if block_given?
       end
-      vertices.extend(VertexSet)
+      VertexSet.new(vertices)
     end
     
     # Removes a vertex and all incoming and outgoing edges.
@@ -81,7 +81,7 @@ module Yargi
     # evaluates to true (see Yargi::Predicate).
     def edges(filter=nil, &block)
       pred = Yargi::Predicate.to_predicate(filter, &block)
-      return @edges.select{|e| pred===e}.extend(VertexSet)
+      return @edges.select{|e| pred===e}
     end
     
     # Calls block on each graph edge
@@ -96,10 +96,10 @@ module Yargi
     
     # Connects source to target state(s)
     def add_edge(source, target, *args)
-      if Array===source
-        source.collect {|src| connect(src, target, *args)}.flatten.extend(EdgeSet)
-      elsif Array===target
-        target.collect {|trg| connect(source, trg, *args)}.flatten.extend(EdgeSet)
+      if looks_a_set?(source)
+        EdgeSet.new(source.collect {|src| connect(src, target, *args)}).flatten
+      elsif looks_a_set?(target)
+        EdgeSet.new(target.collect {|trg| connect(source, trg, *args)}).flatten
       else
         raise ArgumentError, "Source may not be nil" unless source
         raise ArgumentError, "Target may not be nil" unless target
@@ -117,7 +117,7 @@ module Yargi
     def add_edges(*extremities)
       extremities.collect do |extr|
         add_edge(extr[0], extr[1], *extr[2..-1])
-      end.extend(EdgeSet)
+      end
     end
     alias :connect_all :add_edges
     
@@ -137,7 +137,7 @@ module Yargi
     
     # Removes all edges given as argument
     def remove_edges(*edges)
-      edges = edges[0] if edges.length==1 and Array===edges[0]
+      edges = edges[0] if edges.length==1 and looks_a_set?(edges[0])
       edges.sort{|e1,e2| e2.index <=> e1.index}.each do |edge|
         # allowed because edges are sorted in reverse order of index
         edge.source.remove_out_edge(edge)
@@ -151,7 +151,7 @@ module Yargi
     
     # Reconnects some edge
     def reconnect(edge, source, target)
-      if Array===edge
+      if looks_a_set?(edge)
         edge.each {|e| reconnect(e,source,target)}
         edges
       else
@@ -196,6 +196,11 @@ module Yargi
     
     ### Argument conventions #############################################
     protected
+    
+    # Checks if _arg_ looks like an element set
+    def looks_a_set?(arg)
+      Array===arg or ElementSet===arg
+    end
     
     # Checks graph sanity
     def check_sanity
