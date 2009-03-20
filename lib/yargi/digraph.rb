@@ -201,6 +201,7 @@ module Yargi
       # TODO: some values must be encoded (backquoting and the like)
       buffer = ""
       hash.each_pair do |k,v|
+        buffer << " " unless buffer.empty?
         buffer << "#{k}=\"#{v}\""
       end
       buffer
