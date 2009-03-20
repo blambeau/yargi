@@ -37,30 +37,6 @@ module Yargi
       end
     end
     
-    def test_set_and_get_mark_with_hash_API
-      @graph.vertices{|v| Source===v}[:kind] = :source
-      @graph.vertices{|v| Sink===v}[:kind] = :sink
-      @graph.vertices.each do |v|
-        if Source===v
-          assert_equal :source, v[:kind]
-        else
-          assert_equal :sink, v[:kind]
-        end
-      end
-    end
-    
-    def test_set_and_get_mark_with_object_API
-      @graph.vertices{|v| Source===v}[:kind] = :source
-      @graph.vertices{|v| Sink===v}[:kind] = :sink
-      @graph.vertices.each do |v|
-        if Source===v
-          assert_equal :source, v.kind
-        else
-          assert_equal :sink, v.kind
-        end
-      end
-    end
-    
     def test_add_marks
       @graph.vertices{|v| Source===v}.add_marks(:kind => :source, :priority => 1.0)
       @graph.vertices.each do |v|

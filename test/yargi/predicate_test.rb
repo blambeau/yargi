@@ -6,6 +6,18 @@ module Yargi
   # Tests all predidate classes
   class PredicateTest < Test::Unit::TestCase
     
+    def test_to_predicate
+      assert TruePredicate===Predicate.to_predicate(nil)
+      assert TruePredicate===Predicate.to_predicate(true)
+      assert FalsePredicate===Predicate.to_predicate(false)
+      assert TagPredicate===Predicate.to_predicate(Yargi)
+      assert TagPredicate===Predicate.to_predicate(PredicateTest)
+      assert LambdaPredicate===(Predicate.to_predicate {|elm| true})
+      proc = Proc.new {|elm| true}
+      assert LambdaPredicate===Predicate.to_predicate(proc)
+      assert AndPredicate === (Predicate.to_predicate(Yargi) {|elm| true})
+    end
+    
     def test_tag_predicate
       p = TagPredicate.new(Test::Unit::TestCase)
       assert p===self

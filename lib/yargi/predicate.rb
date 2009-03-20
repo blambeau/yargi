@@ -1,45 +1,57 @@
 module Yargi
   
+  #
   # Predicate for graph elements.
+  #
+  # The following automatic conversions apply on Ruby standard classes
+  # when using predicates (see to_predicate in particular):
+  # [Predicate] itself
+  # [Module] TagPredicate
+  # [Proc] LambdaPredicate
+  # [TrueClass, NilClass] TruePredicate
+  # [FalseClass] FalsePredicate
+  # [otherwise] an ArgumentError is raised.
+  #
   class Predicate
     
-    # When _what_ is not nil, converts it to a predicate (typically a module).
-    # Otherwise, a block is expected, which is converted to a LambdaPredicate.
-    # Otherwise, returns ALL.
-    def self.to_predicate(what=nil, &block)
-      if not(what.nil?)
-        case what
+    class << self
+      # Builds a 'what and block' predicate, according the automatic conversions
+      # descibed above.
+      def to_predicate(what=nil, &block)
+        (what, block = block, nil) if what.nil?
+        p = case what
           when Predicate
             what
           when Module
             TagPredicate.new(what)
           when Proc
-            LambdaPredicate.new(what)
-          when TrueClass
+            LambdaPredicate.new(&what)
+          when TrueClass, NilClass
             ALL
           when FalseClass
             NONE
           else
             raise ArgumentError, "Unable to convert #{what} to a predicate"
         end
-      elsif block_given?
-        LambdaPredicate.new &block
-      else
-        ALL
+        if block
+          p & LambdaPredicate.new(&block)
+        else
+          p
+        end
       end
     end
   
-    # Builds a AND predicate
+    # Builds a 'self and right' predicate
     def &(right)
       AndPredicate.new(*[self, Predicate.to_predicate(right)])
     end
     
-    # Builds a OR predicate
+    # Builds a 'self or right' predicate
     def |(right)
       OrPredicate.new(*[self, Predicate.to_predicate(right)])
     end
     
-    # Negates this predicate
+    # Builds a 'not(self)' predicate
     def not()
       NotPredicate.new(self)
     end

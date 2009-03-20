@@ -18,32 +18,22 @@ module Yargi
     
     ### Vertex management ################################################
     
-    # Returns the graph vertices. If _mods_ is empty it is simply ignored. 
-    # Otherwise it is expected to contain module instances. In this case, 
-    # only vertices tagged with at least one of those modules  are returned.
-    # If a block is given, only vertices for which the block  evaluates to 
-    # true are returned. The two filtering techniques can be used conjointly 
-    # with an AND meaning. In other words, this method is a shortcut for:
-    #
-    #   @vertices.select{|v| mods.any?{|mod| mod===v} and yield(v)}
-    # 
-    def vertices(*mods, &block)
-      if mods.empty?
-        return @vertices.dup.extend(VertexSet) unless block_given?
-        return @vertices.select(&block).extend(VertexSet)
-      elsif block_given?
-        return @vertices.select do |v| 
-          mods.any?{|mod| mod===v} and yield(v)
-        end.extend(VertexSet)
-      else
-        return @vertices.select{|v| mods.any?{|mod| mod===v}}.extend(VertexSet)
-      end
+    # Returns all graph vertices for which the 'filter and block' predicate
+    # evaluates to true (see Yargi::Predicate).
+    def vertices(filter=nil, &block)
+      pred = Yargi::Predicate.to_predicate(filter, &block)
+      return @vertices.select{|v| pred===v}.extend(VertexSet)
     end
     
-    # Calls block on each graph vertex
-    def each_vertex(&block)
+    # Calls block on each graph vertex. If _filter_ is not nil?, only vertices
+    # for which the predicate evalutes to true are iterated.
+    def each_vertex(filter=nil, &block)
       return unless block_given?
-      @vertices.each &block
+      if filter.nil?
+        @vertices.each &block
+      else
+        vertices(filter).each &block
+      end
     end
     
     # Adds a vertex
@@ -87,32 +77,21 @@ module Yargi
   
     ### Edge management ##################################################
     
-    # Returns the graph edges. If _mods_ is empty it is simply ignored. 
-    # Otherwise it is expected to contain module instances. In this case, 
-    # only edges tagged with at least one of those modules are returned.
-    # If a block is given, only edges for which the block evaluates to 
-    # true are returned. The two filtering techniques can be used conjointly 
-    # with an AND meaning. In other words, this method is a shortcut for:
-    #
-    #   @edges.select{|e| mods.any?{|mod| mod===v} and yield(e)}
-    # 
-    def edges(*mods, &block)
-      if mods.empty?
-        return @edges.dup.extend(EdgeSet) unless block_given?
-        return @edges.select(&block).extend(EdgeSet)
-      elsif block_given?
-        return @edges.select do |e| 
-          mods.any?{|mod| mod===e} and yield(e)
-        end.extend(EdgeSet)
-      else
-        return @edges.select{|e| mods.any?{|mod| mod===e}}.extend(EdgeSet)
-      end
+    # Returns all graph edges for which the 'filter and block' predicate
+    # evaluates to true (see Yargi::Predicate).
+    def edges(filter=nil, &block)
+      pred = Yargi::Predicate.to_predicate(filter, &block)
+      return @edges.select{|e| pred===e}.extend(VertexSet)
     end
     
     # Calls block on each graph edge
-    def each_edge(&block)
+    def each_edge(filter=nil, &block)
       return unless block_given?
-      @edges.each &block
+      if filter.nil?
+        @edges.each &block
+      else
+        edges(filter).each &block
+      end
     end
     
     # Connects source to target state(s)

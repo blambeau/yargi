@@ -31,7 +31,7 @@ module Yargi
       ifs = @digraph.add_n_vertices(5, If)
       assert_equal untils, @digraph.vertices(Until)
       assert_equal ifs, @digraph.vertices(If)
-      assert_equal (untils+ifs), @digraph.vertices(Until, If)
+      assert_equal (untils+ifs), @digraph.vertices(Yargi::NONE|Until|If)
     end
     
     def test_vertices_with_both
@@ -74,6 +74,18 @@ module Yargi
       seen = []
       @digraph.each_vertex {|v| seen << v}
       assert_equal [v1, v2, v3], seen
+    end
+    
+    def test_each_vertex_with_filter
+      v1, v2, v3, v4, v5 = @digraph.add_n_vertices(5)
+      seen = []
+      filter = Yargi.predicate {|elm| elm.index<3}
+      @digraph.each_vertex(filter) {|v| seen << v}
+      assert_equal [v1, v2, v3], seen
+      seen = []
+      filter = Yargi.predicate {|elm| elm.index>=3}
+      @digraph.each_vertex(filter) {|v| seen << v}
+      assert_equal [v4, v5], seen
     end
     
     def test_each_edge

@@ -14,19 +14,11 @@ module Yargi
       self.collect {|elm| elm.get_mark(key)}
     end
 
-    # If key is an integer, returns the key-th element in this set.
-    # Same as get_mark otherwise.
-    def [](key)
-      return super(key) if Integer===key
-      get_mark(key)
-    end
-    
     # Fired to each element of the group. Values are duplicated by default. 
     # Put dup to false to avoid this behavior.
     def set_mark(key, value, dup=true)
       self.each {|elm| elm.set_mark(key, (dup and not(Symbol===value)) ? value.dup : value)}
     end
-    alias :[]= :set_mark
     
     # When _marks_ is provided, the invocation is fired to all group
     # elements. When a block is given, it is called on each element,
