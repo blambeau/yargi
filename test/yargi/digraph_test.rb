@@ -12,6 +12,33 @@ module Yargi
       @digraph = Yargi::Digraph.new
     end
     
+    def test_to_vertices
+      untils = @digraph.add_n_vertices(5, Until)
+      ifs = @digraph.add_n_vertices(5, If)
+      assert_equal [untils[0]], @digraph.send(:to_vertices, untils[0])
+      assert_equal [untils[0], untils[1]], @digraph.send(:to_vertices, [untils[0], untils[1]])
+      assert_equal [untils[0], untils[1]], @digraph.send(:to_vertices, untils[0], untils[1])
+      assert_equal untils, @digraph.send(:to_vertices, Until)
+      assert_equal ifs, @digraph.send(:to_vertices, If)
+      assert_equal (untils+ifs).sort, @digraph.send(:to_vertices, [Until, If])
+      assert_equal (untils+ifs).sort, @digraph.send(:to_vertices, Until, If)
+      assert_equal (untils+ifs).sort, @digraph.send(:to_vertices, [Until, If, untils[0]])
+      assert_equal (untils+ifs).sort, @digraph.send(:to_vertices, Until, If, untils[0])
+    end
+    
+    def test_to_edges
+      untils = @digraph.add_n_vertices(5, Until)
+      ifs = @digraph.add_n_vertices(5, If)
+      untils_to_ifs = @digraph.connect(untils, ifs)
+      ifs_to_untils = @digraph.connect(ifs, untils)
+      assert_equal [untils_to_ifs[0]], @digraph.send(:to_edges, untils_to_ifs[0])
+      assert_equal [untils_to_ifs[0], untils_to_ifs[1]], @digraph.send(:to_edges, untils_to_ifs[0], untils_to_ifs[1])
+      assert_equal [untils_to_ifs[0], untils_to_ifs[1]], @digraph.send(:to_edges, [untils_to_ifs[0], untils_to_ifs[1]])
+      assert_equal @digraph.edges, @digraph.send(:to_edges, untils_to_ifs, ifs_to_untils)
+      assert_equal untils_to_ifs, @digraph.send(:to_edges, Proc.new{|e| Until===e.source})
+      assert_equal ifs_to_untils, @digraph.send(:to_edges, Proc.new{|e| If===e.source})
+    end
+    
     def test_extend_returns_self_hypothese
       assert_equal self, self.extend(Until)
     end

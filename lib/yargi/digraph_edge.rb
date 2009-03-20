@@ -62,7 +62,7 @@ module Yargi
       
       # Compares indexes
       def <=>(other)
-        return nil unless Vertex===other and self.graph==other.graph
+        return nil unless Edge===other and self.graph==other.graph
         self.index <=> other.index
       end
       
