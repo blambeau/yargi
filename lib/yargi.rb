@@ -3,7 +3,7 @@ require 'yargi/predicate'
 module Yargi
   
   # Current Yargi version
-  VERSION = "0.1.0".freeze
+  VERSION = "0.1.1".freeze
   
   # When _what_ is not nil, converts it to a predicate (typically a module).
   # Otherwise, a block is expected, which is converted to a LambdaPredicate.
