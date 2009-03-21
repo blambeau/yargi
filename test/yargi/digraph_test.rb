@@ -39,6 +39,15 @@ module Yargi
       assert_equal ifs_to_untils, @digraph.send(:to_edges, Proc.new{|e| If===e.source})
     end
     
+    def test_to_dot_attributes
+      hash = {:label => 'hello', :who => 'blambeau'}
+      assert_equal 'label="hello" who="blambeau"', @digraph.send(:to_dot_attributes, hash)
+      hash = {:label => 'hello', :style => ['filled', 'rounded']}
+      assert_equal 'label="hello" style="filled, rounded"', @digraph.send(:to_dot_attributes, hash)
+      hash = {:label => 'hello', :pos => [[12, 14], [15, 17]]}
+      assert_equal 'label="hello" pos="12,14 15,17"', @digraph.send(:to_dot_attributes, hash)
+    end
+    
     def test_extend_returns_self_hypothese
       assert_equal self, self.extend(Until)
     end

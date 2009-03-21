@@ -1,0 +1,15 @@
+= v0.1.2
+- Markable.has_key? to avoid predicate side-effects on v[:mark] when the value is false
+- Markable.add_marks also accepts a block to mimic add_n_vertices and ElementSet.add_marks
+- EdgeSet forwards source= and target= to its elements, allowing bulk reconnection
+- Digraph.to_dot_attributes made much more intelligent on typical array values
+
+= v0.1.1
+- Bug fix in dot generation
+- Examples started and documentation improved
+- Web site index generation using wlang
+
+= v0.1.0
+- Digraph implementation
+- Predicate implementation
+- Selection mechanism

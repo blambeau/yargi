@@ -13,6 +13,11 @@ module Yargi
     def tag(*modules)
       modules.each {|mod| self.extend(mod)}
     end
+    
+    # Checks if a given mark exists
+    def has_mark?(key)
+      @marks and @marks.has_key?(key)
+    end
 
     # Returns the mark value installed under _key_. Returns nil if no such mark.
     def get_mark(key)
@@ -38,8 +43,12 @@ module Yargi
     alias :[]= :set_mark
     
     # Add all marks provided by a Hash instance _marks_.
-    def add_marks(marks)
-      marks.each_pair {|k,v| self[k]=v}
+    def add_marks(marks=nil)
+      marks.each_pair {|k,v| self[k]=v} if marks
+      if block_given?
+        result = yield self
+        add_marks(result) if Hash===result
+      end
     end
     alias :merge_marks :add_marks
     

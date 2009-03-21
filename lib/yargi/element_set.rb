@@ -136,7 +136,7 @@ module Yargi
       if block_given? 
         self.each do |elm|
           hash = yield elm
-          elm.add_marks(hash) if hash
+          elm.add_marks(hash) if Hash===hash
         end
       end
     end

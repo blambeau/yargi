@@ -40,7 +40,6 @@ module Yargi
     # Calls block on each graph vertex for with the 'filter and block' predicate
     # evaluates to true.
     def each_vertex(filter=nil, &block)
-      return unless block_given?
       if filter.nil?
         @vertices.each &block
       else
@@ -99,7 +98,6 @@ module Yargi
     # Calls block on each graph edge for with the 'filter and block' predicate
     # evaluates to true.
     def each_edge(filter=nil, &block)
-      return unless block_given?
       if filter.nil?
         @edges.each &block
       else
@@ -202,6 +200,16 @@ module Yargi
       buffer = ""
       hash.each_pair do |k,v|
         buffer << " " unless buffer.empty?
+        v = case v
+          when Array
+            if v.all?{|elm| Array===elm and elm.length==2 and elm.all?{|subelm| Numeric===subelm}}
+              v.inject('') {|memo, elm| "#{memo} #{elm.join(',')}"}.strip
+            else
+              v.join(', ')
+            end
+          else
+            v.to_s
+        end
         buffer << "#{k}=\"#{v}\""
       end
       buffer
