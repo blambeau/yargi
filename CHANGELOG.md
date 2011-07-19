@@ -22,7 +22,7 @@
 
 * Internals & Devel
 
-  * The project structure is now handled with Noe.
+  * The project structure is now handled by Noe.
 
 # 0.1.2
 
