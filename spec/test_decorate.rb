@@ -19,7 +19,9 @@ module Yargi
     
     specify "SHORTEST_PATH" do
       Decorate::SHORTEST_PATH.execute(graph, [graph.vertices.first])
-      graph.vertices.collect{|v| v[:shortest_path].size}.should == [0, 1, 2, 1]
+      graph.vertices.collect{|v| v[:shortest_path].join(',')}.should == [
+        "", "e0:V0->V1", "e0:V0->V1,e1:V1->V2", "e3:V0->V3"
+      ]
     end
   
   end
