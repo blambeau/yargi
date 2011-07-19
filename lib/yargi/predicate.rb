@@ -30,6 +30,8 @@ module Yargi
             ALL
           when FalseClass
             NONE
+          when Integer
+            IndexPredicate.new(what)
           else
             raise ArgumentError, "Unable to convert #{what} to a predicate"
         end
@@ -215,6 +217,23 @@ module Yargi
     end
     
   end # class OrPredicate
+  
+  # Index predicate
+  class IndexPredicate < Predicate
+    
+    def initialize(index)
+      @index = index 
+    end
+    
+    def ===(elm)
+      elm.index == @index
+    end
+    
+    def inspect
+      "elm.index == #{index}"
+    end
+    
+  end # class IndexPredicate
   
   class Predicate
     

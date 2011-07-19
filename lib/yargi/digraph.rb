@@ -32,6 +32,11 @@ module Yargi
     
     ### Vertex management ################################################
     
+    # Returns the i-th vertex
+    def ith_vertex(i)
+      @vertices[i]
+    end
+    
     # Returns all graph vertices for which the 'filter and block' predicate
     # evaluates to true (see Yargi::Predicate).
     def vertices(filter=nil, &block)
@@ -89,6 +94,11 @@ module Yargi
     alias :remove_vertex :remove_vertices 
     
     ### Edge management ##################################################
+    
+    # Returns the i-th edge
+    def ith_edge(i)
+      @edges[i]
+    end
     
     # Returns all graph edges for which the 'filter and block' predicate
     # evaluates to true (see Yargi::Predicate).
@@ -245,6 +255,8 @@ module Yargi
     def to_vertices(*args)
       selected = args.collect do |arg|
         case arg
+          when Integer
+            [@vertices[arg]]
           when VertexSet
             arg
           when Array
@@ -263,6 +275,8 @@ module Yargi
     def to_edges(*args)
       selected = args.collect do |arg|
         case arg
+          when Integer
+            [@edges[arg]]
           when EdgeSet
             arg
           when Array
