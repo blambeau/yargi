@@ -20,6 +20,7 @@
         graph.connect(1, 2)
 
   * Added Digraph#ith_vertex and Digraph#ith_edge 
+  * Added Digraph#vertex_count and Digraph#edge_count
 
 * Internals & Devel
 

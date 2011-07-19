@@ -32,6 +32,11 @@ module Yargi
     
     ### Vertex management ################################################
     
+    # Returns number of graph vertices
+    def vertex_count
+      @vertices.size
+    end
+    
     # Returns the i-th vertex
     def ith_vertex(i)
       @vertices[i]
@@ -95,6 +100,11 @@ module Yargi
     
     ### Edge management ##################################################
     
+    # Returns number of graph edges
+    def edge_count
+      @edges.size
+    end
+  
     # Returns the i-th edge
     def ith_edge(i)
       @edges[i]
