@@ -31,5 +31,15 @@ module Yargi
       graph.vertices{|v| v[:depth] > 20}.should be_empty
     end
     
+    it "should allow specifying vertex and edge builders" do
+      graph = Digraph.random(10, 20) do |r|
+        r.vertex_builder = lambda{|v,i| v[:i] = i}
+        r.edge_builder   = lambda{|e,i| e[:i] = i}
+        r.strip = false
+      end
+      graph.vertices.collect{|v| v[:i]}.should == (0...10).to_a
+      graph.edges.collect{|e| e[:i]}.should == (0...20).to_a
+    end
+    
   end
 end
