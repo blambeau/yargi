@@ -16,6 +16,11 @@ module Yargi
       Decorate::DEPTH.execute(graph, [graph.vertices.first])
       graph.vertices.collect{|v| v[:depth]}.should == [0, 1, 2, 1]
     end
+    
+    specify "SHORTEST_PATH" do
+      Decorate::SHORTEST_PATH.execute(graph, [graph.vertices.first])
+      graph.vertices.collect{|v| v[:shortest_path].size}.should == [0, 1, 2, 1]
+    end
   
   end
 end

@@ -32,11 +32,23 @@ module Yargi
     end
     
     DEPTH = Decorate.new{|d|
-      d.key    = :depth
-      d.bottom = 1.0/0
-      d.d0     = 0
+      d.key       = :depth
+      d.bottom    = 1.0/0
+      d.d0        = 0
       d.suppremum = lambda{|d1,d2| d1 < d2 ? d1 : d2}
       d.propagate = lambda{|d,e| d+1} 
+    }
+    
+    SHORTEST_PATH = Decorate.new{|d|
+      d.key       = :shortest_path
+      d.bottom    = nil
+      d.d0        = []
+      d.suppremum = lambda{|d1,d2|
+        d1.nil? ? d2 : (d2.nil? ? d1 : (d1.size < d2.size ? d1 : d2))
+      }
+      d.propagate = lambda{|d,e| 
+        d.nil? ? [e] : (d + [e])
+      }
     }
   
   end # class Decorate
