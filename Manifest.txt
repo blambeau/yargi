@@ -1,0 +1,15 @@
+yargi.gemspec
+yargi.noespec
+CHANGELOG.md
+Gemfile
+Gemfile.lock
+bin/**/*
+lib/**/*
+examples/**/*
+LICENCE.md
+Manifest.txt
+Rakefile
+README.md
+spec/**/*
+tasks/**/*
+test/**/*

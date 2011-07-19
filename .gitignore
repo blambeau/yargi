@@ -1,2 +1,8 @@
+coverage/*
+*.DS_Store
 pkg
-.DS_Store
+doc/api
+.yardoc
+.bundle
+.buildpath
+.project
