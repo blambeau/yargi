@@ -1,0 +1,21 @@
+require 'spec_helper'
+module Yargi
+  describe Decorate do
+    
+    let(:graph) do
+      graph = Digraph.new{|d|
+        v0, v1, v2, v3 = d.add_n_vertices(4)
+        d.connect(v0, v1)
+        d.connect(v1, v2)
+        d.connect(v2, v3)
+        d.connect(v0, v3)
+      }
+    end
+    
+    specify "DEPTH" do
+      Decorate::DEPTH.execute(graph, [graph.vertices.first])
+      graph.vertices.collect{|v| v[:depth]}.should == [0, 1, 2, 1]
+    end
+  
+  end
+end

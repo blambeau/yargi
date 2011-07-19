@@ -24,4 +24,4 @@ require 'yargi/digraph_edge'
 require 'yargi/element_set'
 require 'yargi/vertex_set'
 require 'yargi/edge_set'
-
+require 'yargi/decorate'
