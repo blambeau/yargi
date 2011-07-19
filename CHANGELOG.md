@@ -11,12 +11,9 @@
         }
         
   * An integer is now automatically recognized as a selection predicate. This 
-    means that the following will work:
+    means that the following will also work:
     
-        # [... previous example continued ...]
-        graph.vertices(2) # => returns the 2-th vertex (0, 1, **2**)
-        
-        # connection can be made simply as
+        # connect 1-th and 2-th vertices
         graph.connect(1, 2)
 
   * Added Digraph#ith_vertex and Digraph#ith_edge 
