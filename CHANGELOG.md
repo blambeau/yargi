@@ -1,3 +1,9 @@
+# 0.2.0 / FIX ME
+
+* Internals & Devel
+
+  * The project structure is now handled with Noe.
+
 # 0.1.2
 
 * Enhancements
@@ -13,10 +19,6 @@
   * Markable.has_key? is used to avoid predicate side-effects on v[:mark] when 
     the mark is false
     
-* Internals & Devel
-
-  * The project structure is now handled with Noe.
-
 # 0.1.1
 
   * Bug fix in dot generation

@@ -9,7 +9,7 @@ variables:
   upper: 
     Yargi
   version:
-    0.1.2
+    0.2.0
   summary: |-
     Yet Another Ruby Graph Library 
   description: |-
