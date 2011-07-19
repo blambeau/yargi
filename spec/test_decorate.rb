@@ -13,12 +13,12 @@ module Yargi
     end
     
     specify "DEPTH" do
-      Decorate::DEPTH.execute(graph, [graph.vertices.first])
+      Decorate::DEPTH.execute(graph)
       graph.vertices.collect{|v| v[:depth]}.should == [0, 1, 2, 1]
     end
     
     specify "SHORTEST_PATH" do
-      Decorate::SHORTEST_PATH.execute(graph, [graph.vertices.first])
+      Decorate::SHORTEST_PATH.execute(graph)
       graph.vertices.collect{|v| v[:shortest_path].join(',')}.should == [
         "", "e0:V0->V1", "e0:V0->V1,e1:V1->V2", "e3:V0->V3"
       ]

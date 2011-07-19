@@ -10,7 +10,7 @@ module Yargi
       yield(self) if block_given?
     end
 
-    def execute(digraph, initials)
+    def execute(digraph, initials = digraph.vertices(0))
       # all to bottom except initial states
       digraph.each_vertex{|s| s[key] = bottom}
       initials.each{|s| s[key] = d0}
