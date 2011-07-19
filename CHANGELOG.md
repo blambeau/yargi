@@ -1,5 +1,15 @@
 # 0.2.0 / FIX ME
 
+* Enhancements
+
+  * Digraph.new now yields self if a block is given. This allows building a 
+    graph more smoothly:
+    
+        Digraph.new{|d|
+          d.add_n_vertices(5)
+          ...
+        }
+
 * Internals & Devel
 
   * The project structure is now handled with Noe.

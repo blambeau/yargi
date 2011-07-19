@@ -27,6 +27,7 @@ module Yargi
       @vertices = VertexSet[]
       @edges = EdgeSet[]
       @marks = {}
+      yield(self) if block_given?
     end
     
     ### Vertex management ################################################
