@@ -2,25 +2,25 @@ module Yargi
 
   #
   # Random graph generator
-  # 
+  #
   class Random
-    
+
     # @return [Integer] number of vertices to generate
     attr_accessor :vertex_count
-    
+
     # @return [Proc] proc to call on vertex generation
     attr_accessor :vertex_builder
-    
+
     # @return [Integer] number of edges to generate
     attr_accessor :edge_count
-    
+
     # @return [Proc] proc to call on vertex generation
     attr_accessor :edge_builder
-    
+
     # @returns [Boolean] strip the generated graph to one connex component
     #          reachable from the first vertex?
     attr_accessor :strip
-    
+
     # Creates an algorithm instance
     def initialize
       @vertex_count = 50
@@ -30,7 +30,7 @@ module Yargi
       @strip = true
       yield(self) if block_given?
     end
-    
+
     # Executes the random generation
     def execute
       graph = Digraph.new{|g|
@@ -47,19 +47,19 @@ module Yargi
       }
       strip ? _strip(graph) : graph
     end
-    
-    protected 
-    
+
+    protected
+
     def _strip(graph)
       Decorate::DEPTH.execute(graph)
       graph.remove_vertices graph.vertices{|v| v[:depth] == 1.0/0}
       graph
     end
-    
+
   end # class Random
-  
+
   class Digraph
-    
+
     #
     # Generates a random graph.
     #
@@ -69,8 +69,8 @@ module Yargi
     # @return [Digraph] a directed graph randomly generated
     #
     # Example:
-    # 
-    #     # Generate a random graph with 20 vertices 
+    #
+    #     # Generate a random graph with 20 vertices
     #     # and 60 edges exactly (no stripping)
     #     Digraph.random(20,60,false)
     #
@@ -92,7 +92,7 @@ module Yargi
       yield(r) if block_given?
       r.execute
     end
-    
+
   end
-  
+
 end # module Yargi

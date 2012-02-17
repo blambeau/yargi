@@ -3,13 +3,13 @@ require 'yargi'
 
 module Yargi
   class Digraph
-    
+
     class VertexTest < Test::Unit::TestCase
-      
+
       module Center; end
       module AtOne; end
       module AtTwo; end
-  
+
       # Builds the star graph under @star
       def setup
         @star = Yargi::Digraph.new
@@ -22,13 +22,13 @@ module Yargi
         end
         @one_to_two = VertexSet.new(@one_to_two)
       end
-      
+
       def test_in_and_out_edges
         assert_equal EdgeSet[], @center.in_edges
         assert_equal @center_to_one, @center.out_edges
         assert_equal @center_to_one, @atone.collect{|v| v.in_edges}.flatten
       end
-      
+
       def test_in_adjacent
         @atone.each {|v| assert_equal VertexSet[@center], v.in_adjacent}
         @atone.each {|v| assert_equal VertexSet[@center], v.in_adjacent(Center)}
@@ -37,7 +37,7 @@ module Yargi
         assert @atone.in_adjacent(AtOne).empty?
         assert_equal VertexSet[@center], @atone.in_adjacent(Center)
       end
-      
+
       def test_out_adjacent
         @atone.each_with_index {|v,i| assert_equal @attwo[i,1], v.out_adjacent}
         @atone.each_with_index {|v,i| assert_equal @attwo[i,1], v.out_adjacent(AtTwo)}
@@ -46,7 +46,7 @@ module Yargi
         assert @atone.out_adjacent(AtOne).empty?
         assert_equal @attwo, @atone.out_adjacent(AtTwo)
       end
-      
+
       def test_adjacent
         assert_equal @atone, @center.adjacent
         assert_equal (@attwo+[@center]).sort, @atone.adjacent.sort
@@ -54,8 +54,8 @@ module Yargi
         assert_equal @star.vertices, (@atone+[@center]).adjacent.sort
         assert_equal @atone, (@atone+[@center]).adjacent(AtOne).sort
       end
-      
+
     end # class VertexTest
-    
+
   end
 end

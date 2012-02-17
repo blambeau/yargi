@@ -50,7 +50,7 @@ graph.vertices(FileVertex){|v| /\.rb (.*)$/ =~ v.label}.add_marks(
 graph.vertices(FileVertex){|v| /\.rb (.*)$/ =~ v.label}.in_adjacent.add_marks do |v|
   {:fillcolor => 'gold', :fontcolor => 'black'}
 end
- 
+
 # Save it
 File.open(File.join(File.dirname(__FILE__), 'fs2dot.dot'), 'w') do |f|
   f << graph.to_dot

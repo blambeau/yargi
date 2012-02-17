@@ -5,7 +5,7 @@ module Yargi
     attr_accessor :d0
     attr_accessor :suppremum
     attr_accessor :propagate
-    
+
     def initialize
       yield(self) if block_given?
     end
@@ -14,7 +14,7 @@ module Yargi
       # all to bottom except initial states
       digraph.each_vertex{|s| s[key] = bottom}
       initials.each{|s| s[key] = d0}
-        
+
       # main loop
       to_explore = initials
       until to_explore.empty?
@@ -30,15 +30,15 @@ module Yargi
         end
       end
     end
-    
+
     DEPTH = Decorate.new{|d|
       d.key       = :depth
       d.bottom    = 1.0/0
       d.d0        = 0
       d.suppremum = lambda{|d1,d2| d1 < d2 ? d1 : d2}
-      d.propagate = lambda{|d,e| d+1} 
+      d.propagate = lambda{|d,e| d+1}
     }
-    
+
     SHORTEST_PATH = Decorate.new{|d|
       d.key       = :shortest_path
       d.bottom    = nil
@@ -46,10 +46,10 @@ module Yargi
       d.suppremum = lambda{|d1,d2|
         d1.nil? ? d2 : (d2.nil? ? d1 : (d1.size < d2.size ? d1 : d2))
       }
-      d.propagate = lambda{|d,e| 
+      d.propagate = lambda{|d,e|
         d.nil? ? [e] : (d + [e])
       }
     }
-  
+
   end # class Decorate
 end # module Yargi

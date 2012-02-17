@@ -3,15 +3,15 @@ require 'yargi'
 
 module Yargi
   class DigraphTest < Test::Unit::TestCase
-    
+
     module Until; end
     module If; end
-    
+
     # Creates a digraph instance under @digraph
     def setup
       @digraph = Yargi::Digraph.new
     end
-    
+
     def test_to_vertices
       untils = @digraph.add_n_vertices(5, Until)
       ifs = @digraph.add_n_vertices(5, If)
@@ -25,7 +25,7 @@ module Yargi
       assert_equal (untils+ifs).sort, @digraph.send(:to_vertices, [Until, If, untils[0]])
       assert_equal (untils+ifs).sort, @digraph.send(:to_vertices, Until, If, untils[0])
     end
-    
+
     def test_to_edges
       untils = @digraph.add_n_vertices(5, Until)
       ifs = @digraph.add_n_vertices(5, If)
@@ -38,7 +38,7 @@ module Yargi
       assert_equal untils_to_ifs, @digraph.send(:to_edges, Proc.new{|e| Until===e.source})
       assert_equal ifs_to_untils, @digraph.send(:to_edges, Proc.new{|e| If===e.source})
     end
-    
+
 #    def test_to_dot_attributes
 #      hash = {:label => 'hello', :who => 'blambeau'}
 #      assert_equal 'label="hello" who="blambeau"', @digraph.send(:to_dot_attributes, hash)
@@ -47,11 +47,11 @@ module Yargi
 #      hash = {:label => 'hello', :pos => [[12, 14], [15, 17]]}
 #      assert_equal 'label="hello" pos="12,14 15,17"', @digraph.send(:to_dot_attributes, hash)
 #    end
-    
+
     def test_extend_returns_self_hypothese
       assert_equal self, self.extend(Until)
     end
-    
+
     def test_vertices
       v1 = @digraph.add_vertex({:kind => :point})
       v2 = @digraph.add_vertex({:kind => :point})
@@ -65,7 +65,7 @@ module Yargi
       assert_equal VertexSet[v1, v2], @digraph.vertices {|v| v[:kind]==:point}
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_vertices_with_mods
       untils = @digraph.add_n_vertices(5, Until)
       ifs = @digraph.add_n_vertices(5, If)
@@ -73,7 +73,7 @@ module Yargi
       assert_equal ifs, @digraph.vertices(If)
       assert_equal (untils+ifs), @digraph.vertices(Yargi::NONE|Until|If)
     end
-    
+
     def test_vertices_with_both
       untils = @digraph.add_n_vertices(5, Until)
       ifs = @digraph.add_n_vertices(5, If)
@@ -84,7 +84,7 @@ module Yargi
         v.index==0
       end)
     end
-    
+
     def test_module_extended_vertices
       v1 = @digraph.add_vertex(Until)
       v2 = @digraph.add_vertex(If)
@@ -93,7 +93,7 @@ module Yargi
       assert_equal VertexSet[v1], @digraph.vertices {|v| Until===v}
       assert_equal VertexSet[v2], @digraph.vertices {|v| If===v}
     end
-    
+
     def test_tag
       v1, v2 = @digraph.add_n_vertices(2)
       v1.tag(Until)
@@ -101,21 +101,21 @@ module Yargi
       assert Until===v1
       assert If===v2 and Until===v2
     end
-    
+
     def test_edges
       v1, v2, v3 = @digraph.add_n_vertices(3)
       e12, e23, e32, e21 = @digraph.connect_all([v1, v2], [v2, v3], [v3, v2], [v2, v1])
       assert_equal EdgeSet[e12, e23], @digraph.edges {|e| e.index<=1}
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_each_vertex
       v1, v2, v3 = @digraph.add_n_vertices(3)
       seen = []
       @digraph.each_vertex {|v| seen << v}
       assert_equal [v1, v2, v3], seen
     end
-    
+
     def test_each_vertex_with_filter
       v1, v2, v3, v4, v5 = @digraph.add_n_vertices(5)
       seen = []
@@ -127,7 +127,7 @@ module Yargi
       @digraph.each_vertex(filter) {|v| seen << v}
       assert_equal [v4, v5], seen
     end
-    
+
     def test_each_edge
       v1, v2, v3 = @digraph.add_n_vertices(3)
       edges = @digraph.connect_all([v1, v2], [v2, v3], [v3, v2], [v2, v1])
@@ -135,7 +135,7 @@ module Yargi
       @digraph.each_edge {|e| seen << e}
       assert_equal edges, seen
     end
-    
+
     def test_add_vertex
       v1 = @digraph.add_vertex({:style => :begin})
       assert_not_nil v1
@@ -143,7 +143,7 @@ module Yargi
       assert_equal :begin, v1[:style]
       assert_equal VertexSet[v1], @digraph.vertices
       assert_equal 0, v1.index
-      
+
       v2 = @digraph.add_vertex({:style => :end})
       assert_not_nil v2
       assert_equal :end, v2[:style]
@@ -152,7 +152,7 @@ module Yargi
       assert_equal 1, v2.index
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_add_n_vertices
       v1, v2, v3 = @digraph.add_n_vertices(3, {:hello => "world"})
       assert_equal VertexSet[v1, v2, v3], @digraph.vertices
@@ -163,7 +163,7 @@ module Yargi
       assert_equal ["world1", "world2", "world3"], @digraph.vertices.collect{|v| v[:hello]}
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_add_n_vertices_with_block
       vertices = @digraph.add_n_vertices(5, Until) do |v,i|
         v.set_mark(:mark, i)
@@ -174,7 +174,7 @@ module Yargi
       end
       assert_equal [0, 1, 2, 3, 4], vertices.get_mark(:mark)
     end
-    
+
     def test_connect
       v1, v2 = @digraph.add_n_vertices(2)
       edge = @digraph.connect(v1, v2, {:label => "hello"})
@@ -185,14 +185,14 @@ module Yargi
       assert_equal v1, edge.source
       assert_equal v2, edge.target
       assert_equal EdgeSet[edge], @digraph.edges
-      
+
       assert_equal EdgeSet[], v1.in_edges
       assert_equal EdgeSet[edge], v1.out_edges
       assert_equal EdgeSet[], v2.out_edges
       assert_equal EdgeSet[edge], v2.in_edges
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_connect_all
       v1, v2 = @digraph.add_n_vertices(2)
       e1, e2 = @digraph.connect_all([v1, v2], [v2, v1])
@@ -206,7 +206,7 @@ module Yargi
       assert_equal EdgeSet[e1], v1.out_edges
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_connect_all_with_marks
       v1, v2 = @digraph.add_n_vertices(2)
       e1, e2 = @digraph.connect_all([v1, v2, {:hello => "world"}], [v2, v1, {:hello => "world"}])
@@ -224,7 +224,7 @@ module Yargi
       assert_equal "world", e2[:hello]
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_remove_edge
       v1, v2 = @digraph.add_n_vertices(2)
       edge = @digraph.connect(v1, v2)
@@ -235,7 +235,7 @@ module Yargi
       assert_equal EdgeSet[], v1.out_edges
       assert_equal EdgeSet[], v2.in_edges
       assert_equal EdgeSet[], v2.out_edges
-      
+
       e1 = @digraph.connect(v1, v2)
       e2 = @digraph.connect(v2, v1)
       assert_equal VertexSet[v1, v2], @digraph.vertices
@@ -254,7 +254,7 @@ module Yargi
       assert_equal 0, e2.index
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_remove_edges
       v1, v2, v3 = @digraph.add_n_vertices(3)
       e12 = @digraph.connect(v1, v2)
@@ -268,7 +268,7 @@ module Yargi
         assert_equal EdgeSet[], v.out_edges
       end
       assert_equal [-1], [e12, e23, e32, e21].collect {|e| e.index}.uniq
-      
+
       e12 = @digraph.connect(v1, v2)
       e23 = @digraph.connect(v2, v3)
       e32 = @digraph.connect(v3, v2)
@@ -283,7 +283,7 @@ module Yargi
       assert_equal EdgeSet[e21], v1.in_edges
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_remove_vertex
       v1, v2, v3 = @digraph.add_n_vertices(3)
       e12 = @digraph.connect(v1, v2)
@@ -299,7 +299,7 @@ module Yargi
       assert_equal EdgeSet[e32], v2.in_edges
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_reconnect
       v1, v2 = @digraph.add_n_vertices(2)
       edge = @digraph.connect(v1, v2)
@@ -312,13 +312,13 @@ module Yargi
       assert_equal EdgeSet[edge], v2.out_edges
       assert_nothing_raised { @digraph.send(:check_sanity) }
     end
-    
+
     def test_connect_returns_flatten_set
       sources = @digraph.add_n_vertices(5)
       edges = @digraph.connect(sources, sources)
       assert_equal 25, edges.length
     end
-        
+
     # def test_remove_vertex_with_block
     #   v1, v2, v3 = @digraph.add_n_vertices(3)
     #   e12 = @digraph.connect(v1, v2)
@@ -341,7 +341,7 @@ module Yargi
     #   assert_equal [e23, e21], v2.out_edges
     #   assert_nothing_raised { @digraph.send(:check_sanity) }
     # end
-    # 
+    #
     # def test_remove_vertex_with_block_using_edge_shortcuts
     #   v1, v2, v3 = @digraph.add_n_vertices(3)
     #   e12 = @digraph.connect(v1, v2)
@@ -364,6 +364,6 @@ module Yargi
     #   assert_equal [e23, e21], v2.out_edges
     #   assert_nothing_raised { @digraph.send(:check_sanity) }
     # end
-    
+
   end
 end

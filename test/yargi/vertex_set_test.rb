@@ -2,13 +2,13 @@ require 'test/unit'
 require 'yargi'
 
 module Yargi
-  
+
   class VertexSetTest < Test::Unit::TestCase
-    
+
     module Center; end
     module AtOne; end
     module AtTwo; end
-  
+
     def setup
       @star = Yargi::Digraph.new
       @center = @star.add_vertex(Center)
@@ -20,13 +20,13 @@ module Yargi
       end
       #puts @star.to_dot
     end
-    
+
     def test_in_and_out_edges
       assert_equal [], VertexSet[@center].in_edges
       assert_equal @atone.in_edges, VertexSet[@center].out_edges
       assert_equal @attwo.in_edges, @atone.out_edges
     end
-    
+
     def test_in_and_out_edges_no_duplicate
       @star.connect(@atone, @atone)
       assert_equal @atone.in_edges, @atone.in_edges.uniq
@@ -37,7 +37,7 @@ module Yargi
       assert_equal @atone.sort(&sortproc), @atone.out_edges.source.sort(&sortproc)
       assert_equal (@atone+[@center]).sort(&sortproc), @atone.in_edges.source.sort(&sortproc)
     end
-    
+
   end # class VertexSetTest
-  
+
 end

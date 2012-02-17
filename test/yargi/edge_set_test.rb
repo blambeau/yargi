@@ -10,7 +10,7 @@ module Yargi
       @graph.connect(@s1, @s2, {:label => 'a'})
       @graph.connect(@s2, @s1, {:label => 'b'})
     end
-    
+
     def test_source=
       @graph.edges.source=@s1
       assert @graph.edges.length==2
@@ -19,7 +19,7 @@ module Yargi
       assert @s1.out_edges.length==2
       assert @s1.in_edges.length==1
     end
-    
+
     def test_target=
       @graph.edges.target=@s1
       assert @graph.edges.length==2
@@ -28,6 +28,6 @@ module Yargi
       assert @s1.out_edges.length==1
       assert @s1.in_edges.length==2
     end
-    
+
   end
 end

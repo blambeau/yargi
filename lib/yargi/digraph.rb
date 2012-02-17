@@ -6,12 +6,12 @@ module Yargi
   #
   # Directed graph implementation.
   #
-  # * All selection methods (vertices, each_vertex, edges, each_edge) implement the 
-  #   predicate-selection mechanism (they accept a predicate filter as well as a 
+  # * All selection methods (vertices, each_vertex, edges, each_edge) implement the
+  #   predicate-selection mechanism (they accept a predicate filter as well as a
   #   predicate block, with a AND semantics when used conjointly).
   # * Removal methods (remove_vertex, remove_vertices, remove_edge, remove_edges)
-  #   accept varying arguments that are automatically converted to set of vertices 
-  #   or edges. Recognized arguments are Vertex and Edge instances, VertexSet and 
+  #   accept varying arguments that are automatically converted to set of vertices
+  #   or edges. Recognized arguments are Vertex and Edge instances, VertexSet and
   #   EdgeSet instances, Array instances, and predicates. When multiple arguments
   #   are used conjointly, a OR-semantics is applied.
   #
@@ -21,7 +21,7 @@ module Yargi
   #
   class Digraph
     include Yargi::Markable
-  
+
     # Creates an empty graph instance
     def initialize
       @vertices = VertexSet[]
@@ -29,25 +29,25 @@ module Yargi
       @marks = {}
       yield(self) if block_given?
     end
-    
+
     ### Vertex management ################################################
-    
+
     # Returns number of graph vertices
     def vertex_count
       @vertices.size
     end
-    
+
     # Returns the i-th vertex
     def ith_vertex(i)
       @vertices[i]
     end
-    
+
     # Returns all graph vertices for which the 'filter and block' predicate
     # evaluates to true (see Yargi::Predicate).
     def vertices(filter=nil, &block)
       @vertices.filter(filter, &block)
     end
-    
+
     # Calls block on each graph vertex for with the 'filter and block' predicate
     # evaluates to true.
     def each_vertex(filter=nil, &block)
@@ -57,20 +57,20 @@ module Yargi
         vertices(filter).each &block
       end
     end
-    
-    # Adds a vertex. _args_ can be module instances or hashes, 
-    # which are all installed on the vertex _v_ using  <tt>v.tag</tt> 
-    # and <tt>v.add_marks</tt>, respectively. 
+
+    # Adds a vertex. _args_ can be module instances or hashes,
+    # which are all installed on the vertex _v_ using  <tt>v.tag</tt>
+    # and <tt>v.add_marks</tt>, respectively.
     def add_vertex(*args)
       vertex = Digraph::Vertex.new(self, @vertices.length)
       apply_arg_conventions(vertex, args)
       @vertices << vertex
       vertex
     end
-    
-    # Creates n vertices. _args_ can be module instances or hashes, 
-    # which are all installed on vertices _v_ using  <tt>v.tag</tt> 
-    # and <tt>v.add_marks</tt>, respectively. If a block is given, 
+
+    # Creates n vertices. _args_ can be module instances or hashes,
+    # which are all installed on vertices _v_ using  <tt>v.tag</tt>
+    # and <tt>v.add_marks</tt>, respectively. If a block is given,
     # it is called after each vertex creation. The vertex is passed
     # as first argument and the iteration index (from 0 to n-1) as
     # second one.
@@ -83,8 +83,8 @@ module Yargi
       end
       VertexSet.new(vertices)
     end
-    
-    # Removes all vertices returned by evaluating the _vertices_ selection 
+
+    # Removes all vertices returned by evaluating the _vertices_ selection
     # expression.
     def remove_vertices(*vertices)
       vertices = to_vertices(*vertices).sort{|v1,v2| v2<=>v1}
@@ -96,26 +96,26 @@ module Yargi
       @vertices.each_with_index {|v,i| v.index=i}
       self
     end
-    alias :remove_vertex :remove_vertices 
-    
+    alias :remove_vertex :remove_vertices
+
     ### Edge management ##################################################
-    
+
     # Returns number of graph edges
     def edge_count
       @edges.size
     end
-  
+
     # Returns the i-th edge
     def ith_edge(i)
       @edges[i]
     end
-    
+
     # Returns all graph edges for which the 'filter and block' predicate
     # evaluates to true (see Yargi::Predicate).
     def edges(filter=nil, &block)
       @edges.filter(filter, &block)
     end
-    
+
     # Calls block on each graph edge for with the 'filter and block' predicate
     # evaluates to true.
     def each_edge(filter=nil, &block)
@@ -125,10 +125,10 @@ module Yargi
         edges(filter).each &block
       end
     end
-    
-    # Connects source to target state(s). _source_ and _target_ may be any 
-    # selection expression that can lead to vertex sets. _args_ can be module 
-    # instances or hashes,  which are all installed on edges _e_ using 
+
+    # Connects source to target state(s). _source_ and _target_ may be any
+    # selection expression that can lead to vertex sets. _args_ can be module
+    # instances or hashes,  which are all installed on edges _e_ using
     # <tt>e.tag</tt> and <tt>e.add_marks</tt>, respectively.
     def add_edge(source, target, *args)
       if Vertex===source and Vertex===target
@@ -150,7 +150,7 @@ module Yargi
       end
     end
     alias :connect :add_edge
-    
+
     # Adds many edges at once
     def add_edges(*extremities)
       extremities.collect do |extr|
@@ -158,8 +158,8 @@ module Yargi
       end
     end
     alias :connect_all :add_edges
-    
-    # Removes all edges returned by evaluating the _edges_ selection 
+
+    # Removes all edges returned by evaluating the _edges_ selection
     # expression.
     def remove_edges(*edges)
       edges = to_edges(edges).sort{|e1,e2| e2<=>e1}
@@ -173,9 +173,9 @@ module Yargi
       self
     end
     alias :remove_edge :remove_edges
-    
+
     # Reconnects some edge(s). _source_ and _target_ are expected to be
-    # Vertex instances, or nil. _edges_ may be any selection expression 
+    # Vertex instances, or nil. _edges_ may be any selection expression
     # that can be converted to an edge set. This method reconnects all
     # edges to the specified source and target vertices (at least one is
     # expected not to be nil).
@@ -186,7 +186,7 @@ module Yargi
         if source
           edge.source.remove_out_edge(edge)
           source.add_out_edge(edge)
-        end 
+        end
         if target
           edge.target.remove_in_edge(edge)
           target.add_in_edge(edge)
@@ -197,7 +197,7 @@ module Yargi
     end
 
     ### Standard exports #################################################
-    
+
     # Encodes this graph for dot graphviz
     def to_dot(buffer='')
       buffer << "digraph G {\n"
@@ -210,10 +210,10 @@ module Yargi
       end
       buffer << "}\n"
     end
-    
+
     ### Argument conventions #############################################
     protected
-    
+
     # Converts a hash to dot attributes
     def to_dot_attributes(hash)
       # TODO: fix uncompatible key names
@@ -235,32 +235,32 @@ module Yargi
       end
       buffer
     end
-    
+
     # Checks if _arg_ looks like an element set
     def looks_a_set?(arg)
       Array===arg or ElementSet===arg
     end
-    
+
     # Checks graph sanity
     def check_sanity
-      @vertices.each_with_index do |v,i| 
+      @vertices.each_with_index do |v,i|
         raise "Removed vertex in vertex list" unless v.index==i
         v.in_edges.each do |ine|
           raise "Removed edge in vertex incoming edges" if ine.index<0
-          raise "Vertex and edge don't agree on target" unless ine.target==v 
+          raise "Vertex and edge don't agree on target" unless ine.target==v
         end
         v.out_edges.each do |oute|
           raise "Removed edge in vertex outgoing edges" if oute.index<0
-          raise "Vertex and edge don't agree on source" unless oute.source==v 
+          raise "Vertex and edge don't agree on source" unless oute.source==v
         end
       end
-      @edges.each_with_index do |e,i| 
+      @edges.each_with_index do |e,i|
         raise "Removed edge in edge list" unless e.index==i
         raise "Edge in-connected to a removed vertex" if e.source.index<0
         raise "Edge out-connected to a removed vertex" if e.target.index<0
       end
     end
-    
+
     # Applies argument conventions about selection of vertices
     def to_vertices(*args)
       selected = args.collect do |arg|
@@ -280,7 +280,7 @@ module Yargi
       end.flatten.uniq
       VertexSet.new(selected)
     end
-  
+
     # Applies argument conventions about selection of edges
     def to_edges(*args)
       selected = args.collect do |arg|
@@ -300,7 +300,7 @@ module Yargi
       end.flatten.uniq
       EdgeSet.new(selected)
     end
-  
+
     # Applies argument conventions on _element_
     def apply_arg_conventions(element, args)
       args.each do |arg|
@@ -315,7 +315,7 @@ module Yargi
       end
       element
     end
-    
+
   end # class Digraph
-  
+
 end
