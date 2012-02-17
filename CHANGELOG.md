@@ -1,4 +1,4 @@
-# 0.2.0 / FIX ME
+# 0.2.0 / 2012-02-17
 
 * Enhancements
 
@@ -19,6 +19,10 @@
   * Added Digraph#ith_vertex and Digraph#ith_edge 
   * Added Digraph#vertex_count and Digraph#edge_count
   * Added Digraph.random to generate graph for tests and benchmarks
+
+* Bug fixes
+
+  * Misused of $STDERR has been replaced by $stderr
 
 * Internals & Devel
 
