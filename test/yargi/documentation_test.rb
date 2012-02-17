@@ -35,7 +35,7 @@ module Yargi
       begin
         `dot -Tgif -o #{gitfile} #{dotfile}`
       rescue => ex
-        $STDERR << "dot test failed, probably not installed\n#{ex.message}"
+        $stderr.puts "dot test failed, probably not installed\n#{ex.message}"
       end
     end
 
